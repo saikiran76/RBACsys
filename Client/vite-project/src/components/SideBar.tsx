@@ -5,6 +5,7 @@ import UsersIcon from './icons/UsersIcon'
 import SettingsIcon from './icons/SettingsIcon'
 import { twMerge } from 'tailwind-merge'
 import HelpIcon from './icons/HelpIcon'
+import logo from '../assets/logo-cropped.svg'
 
 
 const sides = [
@@ -24,7 +25,8 @@ const sides = [
 
 const SideBar = ({className}:{className?:string}) => {
   return (
-    <div className={twMerge('container bg-gray-900 text-white border-r border-gray-600 w-fit p-2 h-screen', className)}>
+    <div className={twMerge('container bg-gray-900 text-white border-r border-gray-600 w-fit p-2 h-screen relative', className)}>
+        <img src={logo} alt='logo' className='h-10 w-auto ml-6 mt-0 absolute top-8'/>
         <div className='grid-rows-2 justify-between'>
             <div className='p-3 flex flex-col justify-between h-full gap-y-3'>
                 {

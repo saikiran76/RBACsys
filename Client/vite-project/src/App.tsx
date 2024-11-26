@@ -1,14 +1,20 @@
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Dashboard from './sections/Dashboard'
-// import './App.css'
+import Home from './sections/Home'
+import MemberList from './components/MemberList'
+// import Users from './sections/Users'
+// import Settings from './sections/Settings'
 
 function App() {
   return (
     <Router>
-      <div>
-        {/* <Header /> */}
-        <Dashboard />
-      </div>
+      <Routes>
+        <Route path="/" element={<Dashboard />}>
+          <Route path="/Home" element={<Home />} />
+          <Route path="/Users" element={<MemberList />} />
+          {/* <Route path="/Settings" element={<Settings />} /> */}
+        </Route>
+      </Routes>
     </Router>
   )
 }
