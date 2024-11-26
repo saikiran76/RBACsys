@@ -39,7 +39,7 @@ const MemberList: React.FC = () => {
   ];
 
   return (
-    <div className="bg-gray-800 backdrop-blur-md rounded-lg p-6 min-w-[64rem] mx-3 ml-8">
+    <div className="bg-gray-800 backdrop-blur-md rounded-lg p-6 sm:min-w-[24rem] md:min-w-[40rem] lg:min-w-[55rem] xl:min-w-[70rem] mx-3 ml-8">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
           <h1 className="text-xl font-semibold text-white">Members (1000)</h1>
@@ -61,7 +61,7 @@ const MemberList: React.FC = () => {
         </button>
         <button
           className={`pb-2 ${
-            activeTab === 'members' ? 'border-b-2 border-lime-500 text-lime-500' : 'text-gray-500'
+            activeTab === 'admins' ? 'border-b-2 border-lime-500 text-lime-500' : 'text-gray-500'
           }`}
           onClick={() => setActiveTab('admins')}
         >
@@ -69,7 +69,7 @@ const MemberList: React.FC = () => {
         </button>
         <button
           className={`pb-2 ${
-            activeTab === 'groups' ? 'border-b-2 border-lime-500 text-lime-500' : 'text-gray-500'
+            activeTab === 'users' ? 'border-b-2 border-lime-500 text-lime-500' : 'text-gray-500'
           }`}
           onClick={() => setActiveTab('users')}
         >
