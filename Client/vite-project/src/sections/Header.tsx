@@ -2,7 +2,6 @@ import React from 'react'
 import logo from '../assets/logo.svg'
 import UserIcon from '../components/icons/UserIcon'
 import Button from '../components/Button'
-import HelpIcon from '../components/icons/HelpIcon' 
 
 const Header = () => {
   return (
@@ -17,7 +16,6 @@ const Header = () => {
                   </div>
                   <div className='flex items-center justify-end gap-4 mr-5'>
                     <Button className='h-9 bg-gray-800 backdrop-blur-lg text-gray-700/80 hover:bg-gradient-to-r hover:from-lime-400 hover:to-green-700 hover:text-gray-800 transition duration-300' variant='primary'>Create</Button>
-                    <HelpIcon className='w-12 h-9 text-lime-400'/>
 
                     <UserIcon className='w-12 h-9 text-lime-400 border border-white/30 rounded-full'/>
                   </div>

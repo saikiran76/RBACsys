@@ -1,11 +1,15 @@
-import Header from './sections/Header'
+import { BrowserRouter as Router } from 'react-router-dom'
+import Dashboard from './sections/Dashboard'
 // import './App.css'
 
 function App() {
   return (
-    <>
-      <Header />
-    </>
+    <Router>
+      <div>
+        {/* <Header /> */}
+        <Dashboard />
+      </div>
+    </Router>
   )
 }
 
