@@ -32,7 +32,7 @@ const MemberList: React.FC<MemberListProps> = ({
   const [selectedRole, setSelectedRole] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'email'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const { loading, error, handleApi } = useApiState();
+  const { loading, error} = useApiState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | undefined>();
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
@@ -283,8 +283,28 @@ const MemberList: React.FC<MemberListProps> = ({
         <table className="w-full">
           <thead>
             <tr className={`text-left ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
-              <th className="py-3 px-6">User</th>
-              <th className="py-3 px-6">Email</th>
+              <th className="py-3 px-6 cursor-pointer group" onClick={() => {
+                setSortOrder(sortOrder === 'asc' && sortBy === 'name' ? 'desc' : 'asc');
+                setSortBy('name');
+              }}>
+                <div className="flex items-center">
+                  User
+                  <span className={`ml-2 ${sortBy === 'name' ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'}`}>
+                    {sortBy === 'name' && sortOrder === 'asc' ? '↑' : '↓'}
+                  </span>
+                </div>
+              </th>
+              <th className="py-3 px-6 cursor-pointer group" onClick={() => {
+                setSortOrder(sortOrder === 'asc' && sortBy === 'email' ? 'desc' : 'asc');
+                setSortBy('email');
+              }}>
+                <div className="flex items-center">
+                  Email
+                  <span className={`ml-2 ${sortBy === 'email' ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'}`}>
+                    {sortBy === 'email' && sortOrder === 'asc' ? '↑' : '↓'}
+                  </span>
+                </div>
+              </th>
               <th className="py-3 px-6">Role</th>
               <th className="py-3 px-6">Status</th>
               <th className="py-3 px-6">Actions</th>

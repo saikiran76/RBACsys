@@ -5,7 +5,7 @@ import Home from './sections/Home'
 import MemberList from './components/MemberList'
 import ErrorFallback from './components/ErrorFallback'
 import Login from './pages/Login'
-import { AuthProvider, useAuth } from './context/AuthContext'
+import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import { ThemeProvider } from './context/ThemeContext';
 

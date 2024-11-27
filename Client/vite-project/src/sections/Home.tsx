@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Card from '../components/Card';
 import { userApi, roleApi } from '../utils/api';
 import { User, Role } from '../types';

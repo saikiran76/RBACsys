@@ -1,5 +1,4 @@
 import React from 'react';
-import { FiChevronDown } from 'react-icons/fi';
 import { Role } from '../types';
 import { usePermissions } from '../hooks/usePermissions';
 
