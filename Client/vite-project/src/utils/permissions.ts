@@ -14,8 +14,13 @@ export const PERMISSIONS = {
 
 export type PermissionType = keyof typeof PERMISSIONS;
 
-export const checkPermission = (userRole: Role | undefined, requiredPermission: PermissionType): boolean => {
-  if (!userRole) return false;
+export const checkPermission = (userRole: Role, requiredPermission: PermissionType): boolean => {
+  if (!userRole) {
+    console.log('there is no user role found so the permission check will return false')
+    return false
+  };
+
+  console.log('the role has these permissions:', userRole.permissions)
   return userRole.permissions.some(permission => permission.name === requiredPermission);
 };
 

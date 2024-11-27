@@ -13,6 +13,8 @@ const PermissionGate: React.FC<PermissionGateProps> = ({
   permissions = [] 
 }) => {
   const { can, hasAny, loading } = usePermissions();
+
+  console.log("the capabilities of the logged in user after mapping the permissions:", can, " ", hasAny)
   
   if (loading) return null;
   if (permission && !can(permission)) return null;

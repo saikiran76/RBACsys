@@ -27,8 +27,12 @@ export const api = async (endpoint: string, options: ApiOptions = {}) => {
   });
 
   if (!response.ok) {
-    const error = await response.json();
+    const error = await response.json().catch(() => ({ message: 'API request failed' }));
     throw new Error(error.message || 'API request failed');
+  }
+
+  if (response.status === 204) {
+    return null;
   }
 
   return response.json();

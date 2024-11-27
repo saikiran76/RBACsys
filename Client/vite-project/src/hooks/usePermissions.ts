@@ -14,6 +14,7 @@ export const usePermissions = () => {
       if (auth.user?.roleId) {
         try {
           const role = await roleApi.getRoleById(auth.user.roleId);
+          console.log('Role of the logged in: ', role)
           setUserRole(role);
         } catch (error) {
           console.error('Failed to fetch user role:', error);
@@ -25,6 +26,19 @@ export const usePermissions = () => {
 
     fetchUserRole();
   }, [auth.user]);
+
+  console.log('Role of the logged in user:', userRole)
+  console.log()
+
+  if(!userRole){
+    console.log('the user role is not set')
+    return {
+      can: () => false,
+      hasAny: () => false,
+      loading,
+      userRole: null
+    }
+  }
 
   return {
     can: (permission: PermissionType) => checkPermission(userRole, permission),

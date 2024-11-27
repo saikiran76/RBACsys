@@ -8,8 +8,10 @@ import Toast from './Toast';
 import { User, Role } from '../types';
 import PermissionGate from './PermissionGate';
 import UserModal from './UserModal';
+// import RoleModal from './RoleModal';
 import RoleDropdown from './RoleDropdown';
 import { usePermissions } from '../hooks/usePermissions';
+import { useAuth } from '../context/AuthContext';
 
 interface MemberListProps {
   initialMembers?: User[];
@@ -36,8 +38,11 @@ const MemberList: React.FC<MemberListProps> = ({
   const { can } = usePermissions();
   const canCreateUser = can('create:user');
   const canManageSecurity = can('manage:security');
-  const canDeleteUser = can('delete:user');
-  const canUpdateUser = can('update:user');
+  // const canDeleteUser = can('delete:user');
+  // const canUpdateUser = can('update:user');
+  const loggedInUser = useAuth();
+
+  console.log('trying to access thelogged in user:', loggedInUser)
 
   const fetchData = useCallback(async () => {
     try {
@@ -46,7 +51,11 @@ const MemberList: React.FC<MemberListProps> = ({
         roleApi.getRoles()
       ]);
       
-      if (usersData) setMembers(usersData);
+      if (usersData){
+        // WE HAVE TO FILTER OUT THE LOGGED IN USER FROM THE LIST OF USERS
+        // const filteredUsers = usersData.filter((user: User) => user.id !== loggedInUser?.id)
+         setMembers(usersData)
+      };
       if (rolesData) setRoles(rolesData);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -69,6 +78,11 @@ const MemberList: React.FC<MemberListProps> = ({
   const filteredAndSortedMembers = useMemo(() => {
     return members
       .filter(member => {
+
+        if(loggedInUser && loggedInUser.auth.user){
+          if (loggedInUser && member.id === loggedInUser.auth.user.id) return false;
+        }
+
         const matchesSearch = 
           member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           member.email.toLowerCase().includes(searchQuery.toLowerCase());
@@ -301,6 +315,16 @@ const MemberList: React.FC<MemberListProps> = ({
           onSave={handleUserSaved}
         />
       )}
+
+      {/* {
+        isRoleModalOpen && (
+          <RoleModal
+            roles={roles}
+            onClose={() => setIsRoleModalOpen(false)}
+            onSave={handleRoleSaved}
+          />
+        )
+      } */}
     </div>
   );
 };

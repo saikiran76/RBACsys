@@ -37,7 +37,7 @@ export const login = async (
       { expiresIn: config.jwt.expiresIn }
     );
 
-    res.json({ token });
+    res.json({ token, userId: user.id, roleId:user.roleId, roleName: mockDb.roles.get(user.roleId)?.name, email: user.email});
   } catch (error) {
     next(error);
   }

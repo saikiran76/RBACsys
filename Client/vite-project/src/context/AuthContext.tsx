@@ -24,12 +24,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error('Login failed');
       }
 
-      const { token } = await response.json();
+      const { token, userId, roleId, roleName, email } = await response.json();
       
       localStorage.setItem('token', token);
       
       setAuth({
-        user: null, // We'll fetch user details in a separate call
+        user: {
+          id: userId,
+          email: email,
+          roleId: roleId,
+          roleName: roleName
+        }, 
         token,
         isAuthenticated: true,
       });
