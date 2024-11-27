@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Card from '../components/Card';
 import { userApi, roleApi } from '../utils/api';
 import { User, Role } from '../types';
-
+import { useTheme } from '../context/ThemeContext';
 const Home = () => {
+  const { isDarkMode } = useTheme();
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalAdmins: 0,
@@ -43,23 +44,24 @@ const Home = () => {
   }, []);
 
   return (
-    <section className='bg-gray-800 backdrop-blur-md mx-3 ml-8 rounded'>
-      <h2 className='text-xl text-white/80 font-sans px-5 py-4'>
+    <section className={`backdrop-blur-md mx-2 ml-8 rounded min-w-full translate-x-[5%] mt-32
+    ${isDarkMode ? 'border-white/15 bg-gray-800' : 'border-gray-600 bg-white/15 backdrop-blur-lg'}`}>
+      <h2 className={`${isDarkMode ? 'text-white/80' : 'text-gray-700'} text-xl font-sans px-5 py-4`}>
         Hey admin, Welcome back.
       </h2>
       <div className='grid grid-cols-3 gap-4 px-4 py-3'>
-        <Card className='bg-gray-900 bg-opacity-50' title='Total Users'>
-          <h2 className='text-white/80 text-xl font-semibold'>
+        <Card className={`${isDarkMode ? 'bg-[#022213]' : 'bg-[#022213] bg-opacity-80 border-transparent'} bg-opacity-50`} title='Total Users'>
+          <h2 className={`${isDarkMode ? 'text-white/80' : 'text-gray-700'} text-xl font-semibold`}>
             {loading ? '...' : stats.totalUsers}
           </h2>
         </Card>
-        <Card className='bg-gray-900 bg-opacity-50' title='Total Admins'>
-          <h2 className='text-white/80 text-xl font-semibold'>
+        <Card className={`${isDarkMode ? 'bg-[#022213]' : 'bg-gray-900'} bg-opacity-50`} title='Total Admins'>
+          <h2 className={`${isDarkMode ? 'text-white/80' : 'text-gray-700'} text-xl font-semibold`}>
             {loading ? '...' : stats.totalAdmins}
           </h2>
         </Card>
-        <Card className='bg-gray-900 bg-opacity-50' title='Total Roles'>
-          <h2 className='text-white/80 text-xl font-semibold'>
+        <Card className={`${isDarkMode ? 'bg-[#022213]' : 'bg-gray-900'} bg-opacity-50`} title='Total Roles'>
+          <h2 className={`${isDarkMode ? 'text-white/80' : 'text-gray-700'} text-xl font-semibold`}>
             {loading ? '...' : stats.totalRoles}
           </h2>
         </Card>

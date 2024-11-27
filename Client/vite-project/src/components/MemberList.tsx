@@ -14,6 +14,7 @@ import RoleDropdown from './RoleDropdown';
 import { usePermissions } from '../hooks/usePermissions';
 import { useAuth } from '../context/AuthContext';
 import RoleList from './RoleList';
+import { useTheme } from '../context/ThemeContext';
 
 interface MemberListProps {
   initialMembers?: User[];
@@ -45,6 +46,7 @@ const MemberList: React.FC<MemberListProps> = ({
   const loggedInUser = useAuth();
   const [selectedRoleToEdit, setSelectedRoleToEdit] = useState<Role | undefined>();
   const [roleManagementView, setRoleManagementView] = useState<'list' | 'edit' | 'create'>('list');
+  const { isDarkMode } = useTheme();
 
   console.log('trying to access thelogged in user:', loggedInUser)
 
@@ -150,7 +152,7 @@ const MemberList: React.FC<MemberListProps> = ({
     const totalPages = Math.ceil(filteredAndSortedMembers.length / itemsPerPage);
     
     return (
-      <div className="flex justify-end mt-4 space-x-2">
+      <div className="flex justify-end mt-1.5 space-x-2">
         {Array.from({ length: totalPages }, (_, i) => (
           <button
             key={i + 1}
@@ -192,17 +194,26 @@ const MemberList: React.FC<MemberListProps> = ({
   }
 
   return (
-    <div className="bg-gray-800 backdrop-blur-md rounded-lg p-6 sm:min-w-[24rem] md:min-w-[40rem] lg:min-w-[55rem] xl:min-w-[70rem] mx-3 ml-8">
+    <div className={`${
+      isDarkMode 
+        ? 'bg-gray-800' 
+        : 'bg-white/70 border border-gray-300 shadow-sm'
+    } backdrop-blur-md absolute top-[8rem] translate-x-[5%] rounded-lg p-6 sm:min-w-[24rem] md:min-w-[40rem] lg:min-w-[55rem] xl:min-w-[70rem] mx-3 ml-8`}>
       {error && <Toast message={error.message} type="error" onClose={() => {}} />}
+      
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
-          <h1 className="text-xl font-semibold text-white">Members ({members.length})</h1>
+          <h1 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-black'}`}>
+            Members ({members.length})
+          </h1>
         </div>
         <div className="flex space-x-3">
           {canCreateUser && (
             <Button 
               onClick={() => setIsModalOpen(true)}
-              className="bg-lime-500 hover:bg-lime-600"
+              className={isDarkMode 
+                ? "bg-lime-500 hover:bg-lime-600" 
+                : "bg-[#022213] hover:bg-lime-400 text-white/70 hover:text-black"}
             >
               Add User
             </Button>
@@ -213,7 +224,9 @@ const MemberList: React.FC<MemberListProps> = ({
                 setIsRoleModalOpen(true);
                 setRoleManagementView('list');
               }}
-              className="bg-gray-600 hover:bg-gray-700"
+              className={isDarkMode 
+                ? "bg-gray-600 hover:bg-gray-700" 
+                : "bg-[#022213] hover:bg-lime-400 text-white/70 hover:text-black"}
             >
               Edit Roles
             </Button>
@@ -222,30 +235,19 @@ const MemberList: React.FC<MemberListProps> = ({
       </div>
 
       <div className="flex space-x-8 border-b mb-6">
-        <button
-          className={`pb-2 ${
-            activeTab === 'all' ? 'border-b-2 border-lime-500 text-lime-500' : 'text-gray-500'
-          }`}
-          onClick={() => setActiveTab('all')}
-        >
-          All
-        </button>
-        <button
-          className={`pb-2 ${
-            activeTab === 'admins' ? 'border-b-2 border-lime-500 text-lime-500' : 'text-gray-500'
-          }`}
-          onClick={() => setActiveTab('admins')}
-        >
-          Admins
-        </button>
-        <button
-          className={`pb-2 ${
-            activeTab === 'users' ? 'border-b-2 border-lime-500 text-lime-500' : 'text-gray-500'
-          }`}
-          onClick={() => setActiveTab('users')}
-        >
-          Public Users
-        </button>
+        {['all', 'admins', 'users'].map((tab) => (
+          <button
+            key={tab}
+            className={`pb-2 ${
+              activeTab === tab 
+                ? 'border-b-2 border-lime-500 text-lime-500' 
+                : isDarkMode ? 'text-gray-500' : 'text-gray-700'
+            }`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab === 'all' ? 'All' : tab === 'admins' ? 'Admins' : 'Public Users'}
+          </button>
+        ))}
       </div>
 
       <div className="flex items-center space-x-4 mb-6">
@@ -256,29 +258,31 @@ const MemberList: React.FC<MemberListProps> = ({
             placeholder="Search by name or email"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-lime-50 rounded-md"
+            className={`w-full pl-10 pr-4 py-2 ${
+              isDarkMode ? 'bg-lime-50' : 'bg-gray-100'
+            } rounded-md`}
           />
         </div>
-        <div className="relative">
-          <select
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            className="px-4 py-2 bg-lime-50 rounded-md"
-          >
-            <option value="">All Roles</option>
-            {roles.map((role) => (
-              <option key={role.id} value={role.id}>
-                {role.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <select
+          value={selectedRole}
+          onChange={(e) => setSelectedRole(e.target.value)}
+          className={`px-4 py-2 ${
+            isDarkMode ? 'bg-lime-50' : 'bg-gray-100'
+          } rounded-md`}
+        >
+          <option value="">All Roles</option>
+          {roles.map((role) => (
+            <option key={role.id} value={role.id}>
+              {role.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="text-left text-gray-400">
+            <tr className={`text-left ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
               <th className="py-3 px-6">User</th>
               <th className="py-3 px-6">Email</th>
               <th className="py-3 px-6">Role</th>
@@ -288,7 +292,9 @@ const MemberList: React.FC<MemberListProps> = ({
           </thead>
           <tbody>
             {paginatedMembers.map((member) => (
-              <tr key={member.id} className="border-b border-gray-700">
+              <tr key={member.id} className={`border-b ${
+                isDarkMode ? 'border-gray-700' : 'border-gray-600'
+              }`}>
                 <td className="py-4 px-6">
                   <div className="flex items-center space-x-3">
                     <div className="h-10 w-10 rounded-full overflow-hidden">
@@ -299,13 +305,17 @@ const MemberList: React.FC<MemberListProps> = ({
                       />
                     </div>
                     <div>
-                      <p className="text-white">{member.name}</p>
-                      <p className="text-sm text-gray-400">{member.email}</p>
+                      <p className={isDarkMode ? 'text-white' : 'text-black'}>
+                        {member.name}
+                      </p>
+                      <p className={isDarkMode ? 'text-gray-400' : 'text-gray-700'}>
+                        {member.email}
+                      </p>
                     </div>
                   </div>
                 </td>
-                <td className="py-4 px-6">
-                  <p className="text-white">{member.email}</p>
+                <td className={`py-4 px-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                  {member.email}
                 </td>
                 <td className="py-4 px-6">
                   <RoleDropdown
@@ -319,7 +329,11 @@ const MemberList: React.FC<MemberListProps> = ({
                   <select
                     value={member.status}
                     onChange={(e) => handleStatusChange(member.id, e.target.value as 'active' | 'inactive')}
-                    className="bg-gray-700 text-white rounded px-2 py-1"
+                    className={`${
+                      isDarkMode 
+                        ? 'bg-gray-700 text-white' 
+                        : 'bg-[#022213] text-white/70'
+                    } rounded px-2 py-1`}
                     disabled={!can('manage:security')}
                   >
                     <option value="active">Active</option>
@@ -331,7 +345,10 @@ const MemberList: React.FC<MemberListProps> = ({
                     <PermissionGate permission="update:user">
                       <button
                         onClick={() => handleEditUser(member)}
-                        className="text-gray-400 hover:text-gray-300"
+                        className={isDarkMode 
+                          ? "text-gray-400 hover:text-gray-300"
+                          : "text-gray-700 hover:text-gray-900"
+                        }
                       >
                         <FiEdit />
                       </button>
