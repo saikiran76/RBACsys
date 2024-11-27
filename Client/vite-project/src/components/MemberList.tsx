@@ -8,10 +8,12 @@ import Toast from './Toast';
 import { User, Role } from '../types';
 import PermissionGate from './PermissionGate';
 import UserModal from './UserModal';
+import RoleModal from './RoleModal';
 // import RoleModal from './RoleModal';
 import RoleDropdown from './RoleDropdown';
 import { usePermissions } from '../hooks/usePermissions';
 import { useAuth } from '../context/AuthContext';
+import RoleList from './RoleList';
 
 interface MemberListProps {
   initialMembers?: User[];
@@ -41,6 +43,8 @@ const MemberList: React.FC<MemberListProps> = ({
   // const canDeleteUser = can('delete:user');
   // const canUpdateUser = can('update:user');
   const loggedInUser = useAuth();
+  const [selectedRoleToEdit, setSelectedRoleToEdit] = useState<Role | undefined>();
+  const [roleManagementView, setRoleManagementView] = useState<'list' | 'edit' | 'create'>('list');
 
   console.log('trying to access thelogged in user:', loggedInUser)
 
@@ -68,7 +72,10 @@ const MemberList: React.FC<MemberListProps> = ({
 
   const handleRoleChange = useCallback(async (userId: string, roleId: string) => {
     try {
-      await userApi.updateUser(userId, { roleId });
+      await userApi.updateUser(userId, { 
+        roleId,
+        status: 'active'
+      });
       await fetchData();
     } catch (error) {
       console.error('Error updating role:', error);
@@ -130,6 +137,15 @@ const MemberList: React.FC<MemberListProps> = ({
     }
   };
 
+  const handleStatusChange = async (userId: string, status: 'active' | 'inactive') => {
+    try {
+      await userApi.updateUser(userId, { status });
+      await fetchData();
+    } catch (error) {
+      console.error('Error updating user status:', error);
+    }
+  };
+
   const Pagination = () => {
     const totalPages = Math.ceil(filteredAndSortedMembers.length / itemsPerPage);
     
@@ -151,6 +167,21 @@ const MemberList: React.FC<MemberListProps> = ({
       </div>
     );
   };
+
+  const handleRoleSaved = async (roleData: Partial<Role>) => {
+    try {
+      if (roleData.id) {
+        await roleApi.updateRole(roleData.id, roleData);
+      } else {
+        await roleApi.createRole(roleData);
+      }
+      setIsRoleModalOpen(false);
+      await fetchData();
+    } catch (error) {
+      console.error('Failed to save role:', error);
+    }
+  };
+
 
   if (loading) {
     return (
@@ -178,7 +209,10 @@ const MemberList: React.FC<MemberListProps> = ({
           )}
           {canManageSecurity && (
             <Button 
-              onClick={() => setIsRoleModalOpen(true)}
+              onClick={() => {
+                setIsRoleModalOpen(true);
+                setRoleManagementView('list');
+              }}
               className="bg-gray-600 hover:bg-gray-700"
             >
               Edit Roles
@@ -248,6 +282,7 @@ const MemberList: React.FC<MemberListProps> = ({
               <th className="py-3 px-6">User</th>
               <th className="py-3 px-6">Email</th>
               <th className="py-3 px-6">Role</th>
+              <th className="py-3 px-6">Status</th>
               <th className="py-3 px-6">Actions</th>
             </tr>
           </thead>
@@ -279,6 +314,17 @@ const MemberList: React.FC<MemberListProps> = ({
                     userId={member.id}
                     onRoleChange={(roleId) => handleRoleChange(member.id, roleId)}
                   />
+                </td>
+                <td className="py-4 px-6">
+                  <select
+                    value={member.status}
+                    onChange={(e) => handleStatusChange(member.id, e.target.value as 'active' | 'inactive')}
+                    className="bg-gray-700 text-white rounded px-2 py-1"
+                    disabled={!can('manage:security')}
+                  >
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
                 </td>
                 <td className="py-4 px-6">
                   <div className="flex items-center space-x-2">
@@ -316,15 +362,46 @@ const MemberList: React.FC<MemberListProps> = ({
         />
       )}
 
-      {/* {
-        isRoleModalOpen && (
-          <RoleModal
-            roles={roles}
-            onClose={() => setIsRoleModalOpen(false)}
-            onSave={handleRoleSaved}
-          />
-        )
-      } */}
+    {isRoleModalOpen && (
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            setIsRoleModalOpen(false);
+            setRoleManagementView('list');
+          }
+        }}
+      >
+        <div className="bg-gray-800 rounded-lg p-6 w-full max-w-6xl max-h-[90vh] overflow-y-auto">
+          {roleManagementView === 'list' ? (
+            <RoleList
+              roles={roles}
+              onEditRole={(role) => {
+                setSelectedRoleToEdit(role);
+                setRoleManagementView('edit');
+              }}
+              onCreateRole={() => {
+                setSelectedRoleToEdit(undefined);
+                setRoleManagementView('create');
+              }}
+              onClose={() => setIsRoleModalOpen(false)}
+            />
+          ) : (
+            <RoleModal
+              role={roleManagementView === 'edit' ? selectedRoleToEdit : undefined}
+              onClose={() => {
+                setRoleManagementView('list');
+                setSelectedRoleToEdit(undefined);
+              }}
+              onSave={async (roleData) => {
+                await handleRoleSaved(roleData);
+                setRoleManagementView('list');
+              }}
+            />
+          )}
+        </div>
+      </div>
+    )}
     </div>
   );
 };

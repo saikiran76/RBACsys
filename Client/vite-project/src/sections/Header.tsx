@@ -21,7 +21,7 @@ const Header = () => {
   }, []);
 
   return (
-    <section className='bg-gray-900 font-sans [mask-image:linear-gradient(to_bottom,black_10%,black_80%,transparent)] ml-7'>
+    <section className='bg-gray-900 font-sans ml-7'>
       <div className="py-4 lg:py-7 w-full px-2">
         <div className='grid grid-cols-2 border border-white/15 rounded p-3 px-7 md:pr-2 items-center'>
           <div className='flex items-center gap-5'>
@@ -38,7 +38,7 @@ const Header = () => {
                 className="flex items-center space-x-2"
               >
                 <UserIcon className='w-12 h-9 text-lime-400 border border-white/30 rounded-full'/>
-                <span className="text-white/80">{auth.user?.name}</span>
+                <span className="text-white/80">{auth.user?.email}</span>
               </button>
               
               {isDropdownOpen && (

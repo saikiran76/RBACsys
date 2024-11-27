@@ -49,9 +49,25 @@ export const userApi = {
 export const roleApi = {
   getRoles: () => api('/roles'),
   getRoleById: (id: string) => api(`/roles/${id}`),
-  createRole: (roleData: any) => api('/roles', { method: 'POST', body: roleData }),
-  updateRole: (id: string, roleData: any) => api(`/roles/${id}`, { method: 'PUT', body: roleData }),
+  createRole: (roleData: any) => api('/roles', { 
+    method: 'POST', 
+    body: { 
+      ...roleData,
+      permissions: roleData.permissions || []
+    } 
+  }),
+  updateRole: (id: string, roleData: any) => api(`/roles/${id}`, { 
+    method: 'PUT', 
+    body: { 
+      ...roleData,
+      permissions: roleData.permissions || []
+    } 
+  }),
   deleteRole: (id: string) => api(`/roles/${id}`, { method: 'DELETE' }),
+  updatePermissions: (id: string, permissions: string[]) => api(`/roles/${id}/permissions`, {
+    method: 'PUT',
+    body: { permissions }
+  })
 };
 
 export const authApi = {
