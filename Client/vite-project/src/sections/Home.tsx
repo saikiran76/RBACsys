@@ -50,17 +50,17 @@ const Home = () => {
         Hey admin, Welcome back.
       </h2>
       <div className='grid grid-cols-3 gap-4 px-4 py-3'>
-        <Card className={`${isDarkMode ? 'bg-[#022213]' : 'bg-[#022213] bg-opacity-80 border-transparent'} bg-opacity-50`} title='Total Users'>
+        <Card className={`${isDarkMode ? 'bg-[#022213]' : 'bg-[#022213] bg-opacity-80 border-transparent'} hover:bg-gradient-r hover:from-[#022213] hover:to-lime-500 bg-opacity-50 hover:scale-105 transition-all duration-300 shadow-sm hover:shadown-md`} title='Total Users'>
           <h2 className={`${isDarkMode ? 'text-white/80' : 'text-gray-700'} text-xl font-semibold`}>
             {loading ? '...' : stats.totalUsers}
           </h2>
         </Card>
-        <Card className={`${isDarkMode ? 'bg-[#022213]' : 'bg-gray-900'} bg-opacity-50`} title='Total Admins'>
+        <Card className={`${isDarkMode ? 'bg-[#022213]' : 'bg-gray-900'} hover:bg-gradient-r hover:from-[#022213] hover:to-lime-500 bg-opacity-50 hover:scale-105 transition-all duration-300 shadow-sm hover:shadown-md`} title='Total Admins'>
           <h2 className={`${isDarkMode ? 'text-white/80' : 'text-gray-700'} text-xl font-semibold`}>
             {loading ? '...' : stats.totalAdmins}
           </h2>
         </Card>
-        <Card className={`${isDarkMode ? 'bg-[#022213]' : 'bg-gray-900'} bg-opacity-50`} title='Total Roles'>
+        <Card className={`${isDarkMode ? 'bg-[#022213]' : 'bg-gray-900'} hover:bg-gradient-r hover:from-[#022213] hover:to-lime-500 bg-opacity-50 hover:scale-105 transition-all duration-300 shadow-sm hover:shadown-md`} title='Total Roles'>
           <h2 className={`${isDarkMode ? 'text-white/80' : 'text-gray-700'} text-xl font-semibold`}>
             {loading ? '...' : stats.totalRoles}
           </h2>

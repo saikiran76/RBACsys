@@ -10,15 +10,18 @@ import logo from '../assets/logo-cropped.svg'
 const sides = [
     {
         name: 'Home',
-        icon: <HomeIcon className='size-10'/>
+        icon: <HomeIcon className='size-10'/>,
+        path: 'Home'
     },
     {
         name: 'Users',
-        icon: <UsersIcon className='size-10'/>
+        icon: <UsersIcon className='size-10'/>,
+        path: 'Users'
     },
     {
         name: 'Settings',
-        icon: <SettingsIcon className='size-10'/>
+        icon: <SettingsIcon className='size-10'/>,
+        path: 'Home'
     }
 ]
 
