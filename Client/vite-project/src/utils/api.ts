@@ -1,6 +1,4 @@
-const BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://rbacsys.onrender.com/api'
-  : 'http://localhost:3000/api';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 interface ApiOptions {
   method?: string;
@@ -74,7 +72,7 @@ export const roleApi = {
 
 export const authApi = {
   login: (credentials: { email: string; password: string }) => 
-    api('/auth/login', { method: 'POST', body: credentials }),
+    api('/users/login', { method: 'POST', body: credentials }),
   getCurrentUser: () => api('/users/me'),
   logout: () => {
     localStorage.removeItem('token');

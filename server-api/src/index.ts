@@ -12,30 +12,21 @@ const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://rbac-sys.vercel.app/',
+  'https://rbac-sys.vercel.app',
+  'https://rbac-sys.vercel.app/home'
 ];
 
 const corsOptions = {
   origin: function (origin: any, callback: any) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(null, true); 
+      callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: [
-    'Origin',
-    'X-Requested-With',
-    'Content-Type',
-    'Accept',
-    'Authorization',
-    'Access-Control-Allow-Headers',
-    'Access-Control-Request-Headers',
-    'Access-Control-Allow-Origin'
-  ],
   credentials: true,
-  maxAge: 86400
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 if (mockDb.users.size === 0) {
