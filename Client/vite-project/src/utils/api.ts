@@ -25,12 +25,11 @@ export const api = async (endpoint: string, options: ApiOptions = {}) => {
         ...options.headers,
       },
       body: options.body ? JSON.stringify(options.body) : undefined,
-      credentials: 'include'
     });
 
     if (response.status === 401 || response.status === 403) {
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      window.location.replace('/login');
       throw new Error('Authentication failed');
     }
 
@@ -39,11 +38,7 @@ export const api = async (endpoint: string, options: ApiOptions = {}) => {
       throw new Error(error.message || 'API request failed');
     }
 
-    if (response.status === 204) {
-      return null;
-    }
-
-    return response.json();
+    return response.status === 204 ? null : response.json();
   } catch (error) {
     console.error('API Error:', error);
     throw error;
