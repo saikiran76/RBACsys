@@ -1,29 +1,31 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { AuthState, AuthContextType, LoginCredentials } from '../types/auth';
 import { authApi } from '../utils/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [auth, setAuth] = useState<AuthState>({
-    user: null,
-    token: localStorage.getItem('token'),
-    isAuthenticated: !!localStorage.getItem('token'),
+  const [auth, setAuth] = useState<AuthState>(() => {
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('userData');
+    
+    return {
+      user: userData ? JSON.parse(userData) : null,
+      token,
+      isAuthenticated: !!token && !!userData
+    };
   });
 
   const login = async (credentials: LoginCredentials) => {
     try {
       const { token, userId, roleId, roleName, email } = await authApi.login(credentials);
+      const userData = { id: userId, email, roleId, roleName };
       
       localStorage.setItem('token', token);
+      localStorage.setItem('userData', JSON.stringify(userData));
       
       setAuth({
-        user: {
-          id: userId,
-          email: email,
-          roleId: roleId,
-          roleName: roleName
-        }, 
+        user: userData,
         token,
         isAuthenticated: true,
       });
@@ -35,6 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userData');
     setAuth({
       user: null,
       token: null,
