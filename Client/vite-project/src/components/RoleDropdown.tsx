@@ -31,7 +31,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     <select
       value={selectedRoleId}
       onChange={(e) => onRoleChange(e.target.value)}
-      className="px-4 py-1 bg-lime-50 rounded-md pr-8 appearance-none"
+      className="px-4 py-1 bg-lime-50 rounded-md pr-8 text-gray-800/80 appearance-none"
     >
       {roles.map((role) => (
         <option key={role.id} value={role.id}>

@@ -7,18 +7,16 @@ const Dashboard = () => {
   const { isDarkMode } = useTheme();
   
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
-        <div className='relative flex'>
-            <SideBar className={`absolute z-50 top-0 py-28 ${!isDarkMode && 'bg-[#022213]'}`}/>
-            <div className='flex-1 ml-[90px]'>
-                <Header/>
-                <main className={`p-4 absolute ${isDarkMode ? 'bg-gray-900' : 'bg-white/70'}`}>
-                    <Outlet />
-                </main>
-            </div>
-        </div>
+    <div className={`min-h-screen overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
+      <Header className='max-w-screen' />
+      <div className="flex min-h-[20vh]">
+        <SideBar className="bg-[#022213]"/>
+        <main className={`flex-1 p-4 transition-all duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white/70'}`}>
+          <Outlet />
+        </main>
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default Dashboard

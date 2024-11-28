@@ -9,12 +9,14 @@ import { User, Role } from '../types';
 import PermissionGate from './PermissionGate';
 import UserModal from './UserModal';
 import RoleModal from './RoleModal';
-// import RoleModal from './RoleModal';
 import RoleDropdown from './RoleDropdown';
 import { usePermissions } from '../hooks/usePermissions';
 import { useAuth } from '../context/AuthContext';
 import RoleList from './RoleList';
 import { useTheme } from '../context/ThemeContext';
+
+import profile from '../assets/profile.jpg'
+import MobNot from './MobNot';
 
 interface MemberListProps {
   initialMembers?: User[];
@@ -41,8 +43,6 @@ const MemberList: React.FC<MemberListProps> = ({
   const { can } = usePermissions();
   const canCreateUser = can('create:user');
   const canManageSecurity = can('manage:security');
-  // const canDeleteUser = can('delete:user');
-  // const canUpdateUser = can('update:user');
   const loggedInUser = useAuth();
   const [selectedRoleToEdit, setSelectedRoleToEdit] = useState<Role | undefined>();
   const [roleManagementView, setRoleManagementView] = useState<'list' | 'edit' | 'create'>('list');
@@ -194,11 +194,13 @@ const MemberList: React.FC<MemberListProps> = ({
   }
 
   return (
+    <>
+    <MobNot className='md:hidden block'/>
     <div className={`${
       isDarkMode 
         ? 'bg-gray-800' 
-        : 'bg-white/70 border border-gray-300 shadow-sm'
-    } backdrop-blur-md absolute top-[8rem] translate-x-[5%] rounded-lg p-6 sm:min-w-[24rem] md:min-w-[40rem] lg:min-w-[55rem] xl:min-w-[70rem] mx-3 ml-8`}>
+        : 'bg-white/70 border border-gray-300 shadow-md opacity-90'
+    } backdrop-blur-md absolute top-[8rem] translate-x-[7%] translate-y-[2%] rounded-lg p-6 sm:min-w-[24rem] md:w-[50rem] lg:min-w-[60rem] xl:min-w-[70rem] mx-3 ml-8 hidden md:block`}>
       {error && <Toast message={error.message} type="error" onClose={() => {}} />}
       
       <div className="flex items-center justify-between mb-6">
@@ -251,7 +253,7 @@ const MemberList: React.FC<MemberListProps> = ({
       </div>
 
       <div className="flex items-center space-x-4 mb-6">
-        <div className="flex-1 relative">
+        <div className="flex-1 items-center relative">
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <input
             type="text"
@@ -319,7 +321,7 @@ const MemberList: React.FC<MemberListProps> = ({
                   <div className="flex items-center space-x-3">
                     <div className="h-10 w-10 rounded-full overflow-hidden">
                       <img 
-                        src="/default-avatar.png"
+                        src={profile}
                         alt={member.name}
                         className="h-full w-full object-cover"
                       />
@@ -328,13 +330,10 @@ const MemberList: React.FC<MemberListProps> = ({
                       <p className={isDarkMode ? 'text-white' : 'text-black'}>
                         {member.name}
                       </p>
-                      <p className={isDarkMode ? 'text-gray-400' : 'text-gray-700'}>
-                        {member.email}
-                      </p>
                     </div>
                   </div>
                 </td>
-                <td className={`py-4 px-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                <td className={`py-4 px-6 text-sm ${isDarkMode ? 'text-white' : 'text-gray-400'}`}>
                   {member.email}
                 </td>
                 <td className="py-4 px-6">
@@ -440,6 +439,7 @@ const MemberList: React.FC<MemberListProps> = ({
       </div>
     )}
     </div>
+    </>
   );
 };
 
