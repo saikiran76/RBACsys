@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
 import LoginLoad from './LoginLoad';
 
-const MIN_LOADING_TIME = 3500; 
+const MIN_LOADING_TIME = 3500;
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -12,18 +12,17 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     let loadingTimer: NodeJS.Timeout;
-    let navigationTimer: NodeJS.Timeout;
 
     if (isLoading) {
       setShowLoading(true);
       loadingTimer = setTimeout(() => {
-        if (!isLoading) {
-          setShowLoading(false);
+        if (loginSuccess) {
           navigate('/home');
         }
       }, MIN_LOADING_TIME);
@@ -31,9 +30,8 @@ const Login = () => {
 
     return () => {
       clearTimeout(loadingTimer);
-      clearTimeout(navigationTimer);
     };
-  }, [isLoading, navigate]);
+  }, [isLoading, loginSuccess, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,12 +42,13 @@ const Login = () => {
       console.log('Attempting login with:', { email });
       await login({ email, password });
       console.log('Login successful');
-      
+      setLoginSuccess(true);
     } catch (err) {
       console.error('Login error:', err);
       setError(err instanceof Error ? err.message : 'Invalid credentials');
       setIsLoading(false);
       setShowLoading(false);
+      setLoginSuccess(false);
     }
   };
 

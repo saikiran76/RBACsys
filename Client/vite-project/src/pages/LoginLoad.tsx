@@ -35,7 +35,7 @@ const MobNot = ({className}: {className?: string}) => {
 
       {showMessage && (
         <div className="text-center mt-8 max-w-md px-4 animate-fade-in">
-          <p className="mb-4 ">
+          <p className="mb-4 flex items-center justify-center">
             Waiting for the render server to spin up. Takes a moment...
           </p>
         </div>
