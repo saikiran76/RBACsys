@@ -15,44 +15,26 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    let loadingTimer: NodeJS.Timeout;
-    let startTime: number;
-
-    if (isLoading) {
-      setShowLoading(true);
-      startTime = Date.now();
-
-      loadingTimer = setTimeout(async () => {
-        const elapsedTime = Date.now() - startTime;
-        const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
-
-        // Wait for the remaining time if any
-        if (remainingTime > 0) {
-          await new Promise(resolve => setTimeout(resolve, remainingTime));
-        }
-
-        setShowLoading(false);
-        setIsLoading(false);
-        navigate('/home');
-      }, MIN_LOADING_TIME);
-    }
-
-    return () => {
-      if (loadingTimer) clearTimeout(loadingTimer);
-    };
-  }, [isLoading, navigate]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setShowLoading(true);
     setError('');
     
     try {
       await login({ email, password });
+      
+      // Wait for minimum loading time
+      await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
+      
+      // Only navigate if we still have a token (no logout occurred)
+      if (localStorage.getItem('token')) {
+        navigate('/home');
+      }
     } catch (err) {
       console.error('Login error:', err);
       setError(err instanceof Error ? err.message : 'Invalid credentials');
+    } finally {
       setIsLoading(false);
       setShowLoading(false);
     }
