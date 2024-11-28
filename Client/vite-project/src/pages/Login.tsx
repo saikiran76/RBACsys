@@ -1,15 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
+import LoginLoad from './LoginLoad';
+
+const MIN_LOADING_TIME = 3500; 
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let loadingTimer: NodeJS.Timeout;
+    let navigationTimer: NodeJS.Timeout;
+
+    if (isLoading) {
+      setShowLoading(true);
+      loadingTimer = setTimeout(() => {
+        if (!isLoading) {
+          setShowLoading(false);
+          navigate('/home');
+        }
+      }, MIN_LOADING_TIME);
+    }
+
+    return () => {
+      clearTimeout(loadingTimer);
+      clearTimeout(navigationTimer);
+    };
+  }, [isLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,15 +43,19 @@ const Login = () => {
     try {
       console.log('Attempting login with:', { email });
       await login({ email, password });
-      console.log('Login successful, navigating to home');
-      navigate('/home');
+      console.log('Login successful');
+      
     } catch (err) {
       console.error('Login error:', err);
       setError(err instanceof Error ? err.message : 'Invalid credentials');
-    } finally {
       setIsLoading(false);
+      setShowLoading(false);
     }
   };
+
+  if (showLoading) {
+    return <LoginLoad />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
