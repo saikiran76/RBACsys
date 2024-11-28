@@ -19,6 +19,7 @@
 ![alt text](image-1.png)
 
 ### User credentials
+```
 Account Admin
 Email: account.admin@example.com
 Password: admin123
@@ -48,6 +49,7 @@ Email pattern: user1@example.com to user5@example.com
 Password pattern: user1 to user5
 Role: Public
 Permissions: none
+```
 
 ### API Endpoints
 - GET /users
@@ -69,6 +71,7 @@ Permissions: none
 - POST /logout
 
 ## Example API response (GET /roles)
+```
 [
     {
         "id": "679b6dc1-8bcc-4851-ac6c-70aa26e75f54",
@@ -180,5 +183,10 @@ Permissions: none
         "permissions": []
     }
 ]
+```
 
+## Glimpse into the project
+![alt text](image-4.png)
+![alt text](image-2.png)
+![alt text](image-3.png)
 
