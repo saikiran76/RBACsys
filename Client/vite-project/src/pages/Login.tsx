@@ -7,16 +7,25 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
+    
     try {
+      console.log('Attempting login with:', { email });
       await login({ email, password });
+      console.log('Login successful, navigating to home');
       navigate('/home');
     } catch (err) {
-      setError('Invalid credentials');
+      console.error('Login error:', err);
+      setError(err instanceof Error ? err.message : 'Invalid credentials');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -51,8 +60,12 @@ const Login = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full">
-              Login
+            <Button 
+              type="submit" 
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Logging in...' : 'Login'}
             </Button>
           </div>
         </form>

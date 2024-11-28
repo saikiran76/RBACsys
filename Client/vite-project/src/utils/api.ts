@@ -18,6 +18,8 @@ export const api = async (endpoint: string, options: ApiOptions = {}) => {
   }
 
   try {
+    console.log(`Making ${options.method || 'GET'} request to:`, `${BASE_URL}${endpoint}`);
+    
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method: options.method || 'GET',
       headers: {
@@ -27,6 +29,11 @@ export const api = async (endpoint: string, options: ApiOptions = {}) => {
       body: options.body ? JSON.stringify(options.body) : undefined,
     });
 
+    console.log('Response status:', response.status);
+
+    const data = await response.text();
+    console.log('Response data:', data);
+
     if (response.status === 401 || response.status === 403) {
       localStorage.removeItem('token');
       window.location.replace('/login');
@@ -34,11 +41,12 @@ export const api = async (endpoint: string, options: ApiOptions = {}) => {
     }
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'API request failed' }));
-      throw new Error(error.message || 'API request failed');
+      throw new Error(
+        data ? JSON.parse(data).message || 'API request failed' : 'API request failed'
+      );
     }
 
-    return response.status === 204 ? null : response.json();
+    return data ? JSON.parse(data) : null;
   } catch (error) {
     console.error('API Error:', error);
     throw error;
@@ -79,7 +87,10 @@ export const roleApi = {
 
 export const authApi = {
   login: (credentials: { email: string; password: string }) => 
-    api('/users/login', { method: 'POST', body: credentials }),
+    api('/users/login', { 
+      method: 'POST', 
+      body: credentials,
+    }),
   getCurrentUser: () => api('/users/me'),
   logout: () => {
     localStorage.removeItem('token');
