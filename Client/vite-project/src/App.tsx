@@ -5,6 +5,7 @@ import Home from './sections/Home'
 import MemberList from './components/MemberList'
 import ErrorFallback from './components/ErrorFallback'
 import Login from './pages/Login'
+import NotFound from './components/404'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import { ThemeProvider } from './context/ThemeContext';
@@ -28,6 +29,8 @@ function App() {
                   <Route path="/home" element={<Home />} />
                   <Route path="/users" element={<MemberList />} />
                 </Route>
+
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </Router>
           </SidebarProvider>
