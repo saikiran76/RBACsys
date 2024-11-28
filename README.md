@@ -189,4 +189,12 @@ Permissions: none
 ![alt text](image-4.png)
 ![alt text](image-2.png)
 ![alt text](image-3.png)
+![alt text](image-5.png)
+
+
+## Future Scope
+- A real-time DataBase like Postgres can be used to store the data and maintain the relationships b/w tables and data integrity. Server could be scaled to handle more users and data.
+- System management can be added to manage the system logs or settings which can be used to manage the system
+- Security management can be added to manage the security settings and permissions of the users.    
+- A real-time scenario or use-case like a company data management, and dashboards can be added.
 
