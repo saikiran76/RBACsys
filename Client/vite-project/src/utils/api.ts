@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const BASE_URL = 'https://rbacsys.onrender.com/api';
 
 interface ApiOptions {
   method?: string;
@@ -17,25 +17,37 @@ export const api = async (endpoint: string, options: ApiOptions = {}) => {
     defaultHeaders['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    method: options.method || 'GET',
-    headers: {
-      ...defaultHeaders,
-      ...options.headers,
-    },
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  });
+  try {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      method: options.method || 'GET',
+      headers: {
+        ...defaultHeaders,
+        ...options.headers,
+      },
+      body: options.body ? JSON.stringify(options.body) : undefined,
+      credentials: 'include'
+    });
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'API request failed' }));
-    throw new Error(error.message || 'API request failed');
+    if (response.status === 401 || response.status === 403) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+      throw new Error('Authentication failed');
+    }
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: 'API request failed' }));
+      throw new Error(error.message || 'API request failed');
+    }
+
+    if (response.status === 204) {
+      return null;
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('API Error:', error);
+    throw error;
   }
-
-  if (response.status === 204) {
-    return null;
-  }
-
-  return response.json();
 };
 
 export const userApi = {
