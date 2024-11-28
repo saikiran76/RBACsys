@@ -1,30 +1,19 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { AuthState, AuthContextType, LoginCredentials } from '../types/auth';
+import { authApi } from '../utils/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const BASE_URL = 'http://localhost:3000/api';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<AuthState>({
     user: null,
     token: localStorage.getItem('token'),
-    isAuthenticated: false,
+    isAuthenticated: !!localStorage.getItem('token'),
   });
 
   const login = async (credentials: LoginCredentials) => {
     try {
-      const response = await fetch(`${BASE_URL}/users/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
-      });
-
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-
-      const { token, userId, roleId, roleName, email } = await response.json();
+      const { token, userId, roleId, roleName, email } = await authApi.login(credentials);
       
       localStorage.setItem('token', token);
       
