@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = 'https://rbacsys.onrender.com' || 'http://localhost:3000/api';
 
 interface ApiOptions {
   method?: string;
